@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import React, { MouseEventHandler, ReactElement } from 'react';
 import identity from 'lodash-es/identity';
 
 export enum ButtonVariations {
@@ -21,6 +21,8 @@ type ButtonClassNames = {
 
 interface Props {
   children?: React.ReactNode;
+  className?: string;
+  noPadding?: boolean;
   onClick?: MouseEventHandler;
   transparent?: boolean;
   type?: ButtonTypes;
@@ -56,24 +58,28 @@ const transparentButtonClassNames: ButtonClassNames = {
 
 export default function Button({
   children = null,
+  className = '',
+  noPadding = false,
   onClick = identity,
   transparent = false,
   type = ButtonTypes.button,
   variation = ButtonVariations.primary,
-}: Props): JSX.Element {
+}: Props): ReactElement {
   const { background, text } = transparent
     ? transparentButtonClassNames[variation]
     : solidButtonClassNames[variation];
-  const className = [
-    'px-8 py-3 rounded-md text-xl transition',
+  const finalClassName = [
+    'rounded-md text-center text-xl transition',
+    noPadding ? '' : 'px-8 py-3',
     background,
     text,
+    className,
   ].join(' ');
 
   return (
     <button
       type={type === ButtonTypes.submit ? 'submit' : 'button'}
-      className={className}
+      className={finalClassName}
       onClick={onClick}
     >
       {children}
